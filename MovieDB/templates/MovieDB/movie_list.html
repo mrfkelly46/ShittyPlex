@@ -67,97 +67,128 @@
 </div>
 
 {% for movie in movies %}
-<div class="row">
+<div class="row movie">
 
-    <div class="col-md-2">
+    <div class="col-md-2 spacer">
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-2 poster">
         <a href='https://www.imdb.com/title/{{ movie.movie_imdbid }}'><img class="img-responsive" src="{{ movie.movie_poster }}"></img></a>
     </div>
 
-    <div class="col-md-6">
-        <div class="row">
-            <div class="col-md-6">
+    <div class="col-md-6 info">
+
+        <div class="row title">
+            <div class="col-md-12">
                 <h2><a href="https://imdb.com/title/{{ movie.movie_imdbid }}">{{ movie.movie_title }}</a></h2>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row body">
             <div class="col-md-12">
-                <strong>Year</strong>
-                {{ movie.movie_year }}
+
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Year</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_year }}
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Genre</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_genre }}
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>IMDB Rating</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_imdbrating }}
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Runtime</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_runtime }} minutes
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Director</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_director }} 
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Writer</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_writer }} 
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Actors</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_actors }} 
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Plot</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_plot }} 
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Rated</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_rated }} 
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Released</strong>
+                    </div>
+                    <div class="col-md-10">
+                        {{ movie.movie_released }} 
+                    </div>
+                </div>
+                <div class="row spacer">
+                    <div class="col-md-2">
+                        <br>
+                    </div>
+                </div>
+                {% if ".mp4" in movie.filepath and not isMobile %}
+                <div class="row data">
+                    <div class="col-md-2 header">
+                        <strong>Stream MP4</strong>
+                    </div>
+                    <div class="col-md-10">
+                        <a href='file://PI-LANTIR\PiShare - Public\Movies\{{ movie.filepath }}'>{{ movie.filepath }}</a>
+                    </div>
+                </div>
+                {% endif %}
+                        
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Genre</strong>
-                {{ movie.movie_genre }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>IMDB Rating</strong>
-                {{ movie.movie_imdbrating }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Runtime</strong>
-                {{ movie.movie_runtime }} minutes
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Director</strong>
-                {{ movie.movie_director }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Writer</strong>
-                {{ movie.movie_writer }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Actors</strong>
-                {{ movie.movie_actors }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Plot</strong>
-                {{ movie.movie_plot }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Rated</strong>
-                {{ movie.movie_rated }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Released</strong>
-                {{ movie.movie_released }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <br>
-            </div>
-        </div>
-        {% if ".mp4" in movie.filepath  and not isMobile %}
-        <div class="row">
-            <div class="col-md-12">
-                <strong>Stream MP4</strong>
-                <a href='file://PI-LANTIR\PiShare - Public\Movies\{{ movie.filepath }}'>{{ movie.filepath }}</a>
-            </div>
-        </div>
-        {% endif %}
+
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-2 spacer">
     </div>
 
 </div>
