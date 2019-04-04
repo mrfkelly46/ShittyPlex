@@ -49,7 +49,8 @@
             </select>
         </div>
         
-        <input type="submit" value="Search">
+        <input type="submit" value="Search" formaction="{% url 'movie_list' %}">
+        <input type="submit" value="Random" formaction="{% url 'random' %}">
     </form>
     </div>
     <div class="col-md-2">
@@ -211,6 +212,7 @@ jQuery(document).ready(function($){
     $( '#search' ).find( ":input" ).prop( "disabled", false );
     
 });
+
 </script>
 
 {% endblock %}

@@ -39,4 +39,26 @@ def movie_list(request):
     num_results = len(movies)
     return render(request, 'MovieDB/movie_list.html', {'movies': movies, "numResults": num_results, "isMobile": is_mobile})
 
- 
+def random(request):
+    is_mobile = request.user_agent.is_mobile
+    
+    # Filters
+    filters_dict = {}
+
+    filters = request.GET.get('filters')
+    if filters:
+        filter_ = filters.split(", ")
+        for f in filter_:
+            temp = f.split(":")
+            # If no type declared, assume it is title
+            if len(temp) == 1:
+                filters_dict['movie_title__icontains'] = temp[0]
+            else:
+                filters_dict['movie_'+temp[0].lower()+'__icontains'] = temp[1]
+
+    movie = Movie.objects.filter(**filters_dict).order_by('?').first()
+    movies = []
+    movies.append(movie) 
+    num_results = 1
+    return render(request, 'MovieDB/movie_list.html', {'movies': movies, "numResults": num_results, "isMobile": is_mobile})
+
