@@ -17,9 +17,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('MovieDB.urls')),
-    path('MovieDB/', include('MovieDB.urls')),
-    path('moviedb/', include('MovieDB.urls')),
-    path('MovieDB/', include('MovieDB.urls')),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^MovieDB/', include('MovieDB.urls')),
+    re_path(r'^accounts/', include('django.contrib.auth.urls')),
 ]

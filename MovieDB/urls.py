@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path
 
-from . import views
+from .views import general
+from .views import auth
 
 urlpatterns = [
-    path('', views.movie_list, name='movie_list'),
-    path('random', views.random, name='random'),
+    re_path('^$', general.movie_list, name='movie_list'),
+    re_path('^random/$', general.random, name='random'),
 ]

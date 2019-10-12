@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Movie
+from ..models import Movie
 
 # Create your views here.
 
@@ -11,34 +11,35 @@ def movie_list(request):
     #   s2 => sort 2 (title, year, runtime, ...)
     #   s2o => sort 2 order (ascending, descending)
     #   filters => filters to search with (director='ron', ...)
+    context = {}
 
     ##### Sorting #####
-    DEFAULT_SORT_1_ORDER = 'D'
-    DEFAULT_SORT_1 = 'movie_added'
-    DEFAULT_SORT_2_ORDER = 'A'
-    DEFAULT_SORT_2 = 'movie_title'
+    DEFAULT_SORT1_ORDER = 'des'
+    DEFAULT_SORT1 = 'movie_added'
+    DEFAULT_SORT2_ORDER = 'asc'
+    DEFAULT_SORT2 = 'movie_title'
 
     # If sorting was set by user, grab sorting order as well.
     # Otherwise, fall back to default sorting and sorting order.
-    sort_1 = request.GET.get('s1')
-    if sort_1 is not None:
-        sort_1_order = request.GET.get('s1o')
+    sort1 = request.GET.get('sort1')
+    if sort1 is not None:
+        sort1_order = request.GET.get('sort1_order')
     else:
-        sort_1 = DEFAULT_SORT_1
-        sort_1_order = DEFAULT_SORT_1_ORDER
+        sort1 = DEFAULT_SORT1
+        sort1_order = DEFAULT_SORT1_ORDER
 
-    sort_2 = request.GET.get('s2')
-    if sort_2 is not None:
-        sort_2_order = request.GET.get('s2o')
+    sort2 = request.GET.get('sort2')
+    if sort2 is not None:
+        sort2_order = request.GET.get('sort2_order')
     else:
-        sort_2 = DEFAULT_SORT_2
-        sort_2_order = DEFAULT_SORT_2_ORDER
+        sort2 = DEFAULT_SORT2
+        sort2_order = DEFAULT_SORT2_ORDER
 
     # If sorting is random, then make sure not to attempt reverse order -- breaks
-    if sort_1 == "?":
-        sort_1_order = 'A'
-    if sort_2 == "?":
-        sort_2_order = 'A'
+    if sort1 == "?":
+        sort1_order = 'asc'
+    if sort2 == "?":
+        sort2_order = 'asc'
 
     ##### Filtering #####
     filters = request.GET.get('filters') 
@@ -46,22 +47,28 @@ def movie_list(request):
 
     # If filters were submitted AND no sorting options were submitted,
     # then sort by title and year for more logical result sorting
-    if filters_dict and not request.GET.get('s1') and not request.GET.get('s2'):
-        sort_1 = 'movie_title'
-        sort_1_order = 'A'
-        sort_2 = 'movie_year'
-        sort_2_order = 'A'
+    if filters_dict and not request.GET.get('sort1') and not request.GET.get('sort2'):
+        sort1 = 'movie_title'
+        sort1_order = 'asc'
+        sort2 = 'movie_year'
+        sort2_order = 'asc'
+
+    context['filters'] = filters
+    context['sort1'] = sort1
+    context['sort1_order'] = sort1_order
+    context['sort2'] = sort2
+    context['sort2_order'] = sort2_order
 
     # Convert sorting to a string used in order_by()
-    sort_1_str = ('' if sort_1_order == 'A' else '-') + sort_1
-    sort_2_str = ('' if sort_2_order == 'A' else '-') + sort_2
+    sort1_str = ('' if sort1_order == 'asc' else '-') + sort1
+    sort2_str = ('' if sort2_order == 'asc' else '-') + sort2
 
     # Filter and order movies
-    movies = Movie.objects.filter(**filters_dict).order_by(sort_1_str, sort_2_str)
+    context['movies'] = Movie.objects.filter(**filters_dict).order_by(sort1_str, sort2_str)
 
-    num_results = len(movies)
-    is_mobile = request.user_agent.is_mobile
-    return render(request, 'MovieDB/movie_list.html', {'movies': movies, "numResults": num_results, "isMobile": is_mobile})
+    context['num_results'] = len(context['movies'])
+    context['is_mobile'] = request.user_agent.is_mobile
+    return render(request, 'MovieDB/movie_list.html', context)
 
 def random(request):
     ##### Filtering #####
@@ -92,3 +99,4 @@ def get_filters(filters):
                 filters_dict['movie_'+temp[0].lower()+'__icontains'] = temp[1]
 
     return filters_dict
+
