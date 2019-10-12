@@ -1,0 +1,4 @@
+*.pyc
+django-admin.py
+*/migrations/*
+static/admin/*

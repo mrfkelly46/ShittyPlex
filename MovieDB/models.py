@@ -2,13 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class Test(models.Model):
-    test_header = models.CharField(max_length=200)
-    test_date = models.DateTimeField('date published')
-
 class Movie(models.Model):
-    class Meta:
-        unique_together = (('movie_title', 'movie_year'),)
     movie_title = models.CharField(max_length=100)
     movie_year = models.IntegerField()
     movie_added = models.TextField(null=True)
@@ -24,6 +18,12 @@ class Movie(models.Model):
     movie_imdbrating = models.DecimalField(max_digits=3, decimal_places=1, null=True)
     movie_imdbvotes = models.IntegerField(null=True)
     movie_imdbid = models.TextField(null=True)
-    manual = models.TextField(null=True)
+    manual = models.BooleanField(default=False)
     filepath = models.TextField(null=True)
+
+    def __str__(self):
+        return '({}) {}'.format(self.movie_year, self.movie_title)
+
+    class Meta:
+        unique_together = (('movie_title', 'movie_year'),)
 
