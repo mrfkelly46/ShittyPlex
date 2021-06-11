@@ -1,0 +1,12 @@
+{% extends 'MovieDB/base.html' %}
+
+{% block title %}
+  {{ movie }}
+{% endblock %}
+
+{% block content %}
+
+  {% include 'MovieDB/movie.html' with movie=movie detailed=True %}
+
+{% endblock content %}
+

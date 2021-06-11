@@ -1,0 +1,25 @@
+{% extends 'MovieDB/base.html' %}
+
+{% block content %}
+  <div class="card" style="height:100%">
+    <div class="card-body">
+      <h1>HOME</h1>
+      <ul>
+        <li>Home page</li>
+        <ul>
+          <li>Suggested unwatched movie?</li>
+          <li>From saved list?</li>
+          <li>Random movie themed fact? Look for an API?</li>
+        </ul>
+        <li>Profile page</li>
+        <li>Put date-added at bottom of movie details</li>
+        <li>Add a search helper (similar to scryfall ez mode)</li>
+        <li>User preferences e.g. dark mode, accent color, home page display, ...</li>
+        <li>If embedded subtitles work, store them in their own model??</li>
+        <li>Store codecs to determine if we can stream -- cant do avi, cant do ac3, can do most of the rest... Same process as runtime</li>
+        <li>Store file inode (or whatever it is called, an OS-level identifier) to determine new/old/etc and remove unique constraint</li>
+      </ul>
+    </div>
+  </div>
+{% endblock content %}
+

@@ -1,0 +1,21 @@
+{% extends 'MovieDB/base.html' %}
+
+{% block title %}
+  Login 
+{% endblock %}
+
+{% block content %}
+  <div class="card" style="height:100%">
+    <div class="card-body">
+      <h2>Login</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+      </form>
+      </br>
+      <p><a href="{% url 'accounts:signup' %}">Don't have an account? Sign up</a></p>
+    </div>
+  </div>
+{% endblock %}
+

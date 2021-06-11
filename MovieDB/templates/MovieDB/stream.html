@@ -1,0 +1,92 @@
+{% extends 'MovieDB/base.html' %}
+{% load static %}
+
+{% block title %}
+  {{ movie }}
+{% endblock %}
+
+{% block css %}
+  {{ super }}
+  <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+  <div class="card">
+    <div class="card-body">
+
+      {# HEADER #}
+      <div class="row">
+        <div class="col mr-auto">
+          <a href="{% url 'MovieDB:movie' movie.id %}">
+            <h2 class="card-title">
+              {{ movie.title }}
+            </h2>
+          </a>
+        </div>
+      </div>
+      {# /HEADER #}
+
+      <video id="video" controls autoplay style="width:100%">
+        {% if transcode %}
+          <source src="{% url 'MovieDB:movie_transcode' movie.id %}" type="video/webm">
+        {% else %}
+          <source src="{{ movie.url }}" type="video/webm">
+        {% endif %}
+        {% if movie.subtitles %}
+          <track label="English" kind="subtitles" srclang="en" src="{{ movie.subtitles.url }}">
+        {% else %}
+          <track label="English" kind="subtitles" srclang="en" src="{{ movie.sub_url }}">
+        {% endif %}
+      </video>
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  {{ super }}
+  <script>
+    video = document.getElementById("video");
+    async function check() {
+      video = document.getElementById("video");
+      await new Promise(r => setTimeout(r, 1500));
+      if(streamable(video)) {
+        alert("Video is OK!");
+      } else {
+        alert("Video is BAD!");
+      }
+    }
+    streamable(video);
+    /*
+    document.getElementById("video").addEventListener("loadedmetadata", function() {
+      console.log(this);
+      if(streamable(this)) {
+        alert("Video is OK!");
+      } else {
+        alert("Video is BAD!");
+      }
+    });
+    document.getElementById("video").addEventListener("loadeddata", function() {
+      await new Promise(r => setTimeout(r, 5000));
+      Promise.resolve().then(_ => {
+        console.log(this);
+        if(streamable(this)) {
+          alert("Video is OK!");
+        } else {
+          alert("Video is BAD!");
+        }
+      });
+    });
+    */
+  </script>
+  {% comment %}
+  <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+  <script>
+    var video = videojs('video');
+    video.src("{% url 'MovieDB:movie_transcode' movie.id %}");
+  </script>
+  {% endcomment %}
+{% endblock %}
+  

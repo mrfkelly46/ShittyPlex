@@ -1,0 +1,114 @@
+{% extends 'MovieDB/base.html' %}
+{% load urlreplace %}
+
+{% block title %}
+Advanced Search
+{% endblock %}
+
+{% block content %}
+
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Advanced Search</h2>
+      <form action="{% url 'MovieDB:advanced_search' %}" method="get" id="search-form">
+
+        <div class="form-group">
+          <label for="filters">Filters</label>
+          <input id="filters" type="text" class="form-control" name="filters" placeholder="Filter by title, or as <field>:<term> e.g. actors:tom cruise (multiple filters seperated by ', ')" value="{{ filters|default:"" }}">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="sort-1">Primary Sort</label>
+            <select id="sort-1" name="sort_1" class="form-control selectpicker" data-style="bg-gray">
+              {% for option, value in sort_options.items %}
+                <option value="{{ value }}" {% if sort_1 == value %} selected {% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="saved">Secondary Sort</label>
+            <select id="sort-2" name="sort_2" class="form-control selectpicker" data-style="bg-gray">
+              {% for option, value in sort_options.items %}
+                <option value="{{ value }}" {% if sort_2 == value %} selected {% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          {% if user.is_authenticated %}
+          <div class="form-group col-4">
+          {% else %}
+          <div class="form-group col-12">
+          {% endif %}
+            <label for="streamable">Streamable</label><br>
+            <select id="streamable" name="streamable" class="form-control selectpicker" data-style="bg-gray">
+              {% for option, value in streamable_options.items %}
+                <option value="{{ value }}" {% if value in streamable %} selected {% endif %}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% if user.is_authenticated %}
+            <div class="form-group col-4">
+              <label for="watched">Watched</label>
+              <select id="watched" name="watched" class="form-control selectpicker" data-style="bg-gray">
+                {% for option, value in watched_options.items %}
+                  <option value="{{ value }}" {% if value in watched %} selected {% endif %}>{{ option }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group col-4">
+              <label for="saved">Saved</label>
+              <select id="saved" name="saved" class="form-control selectpicker" data-style="bg-gray">
+                {% for option, value in saved_options.items %}
+                  <option value="{{ value }}" {% if value in saved %} selected {% endif %}>{{ option }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+        </div>
+        
+        <button class="btn btn-dark" type="submit" name="search">Search</button> 
+        <button id="random" class="btn btn-dark" type="submit" name="random">Random</button> 
+
+      </form>
+    </div>
+  </div>
+
+  <div id="results">
+    {% include 'MovieDB/movie_list.html' with movies=movies %}
+    {% include 'MovieDB/pagination.html' with page_obj=movies %}
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    $('select').selectpicker();
+
+    $('#random').click(function(e) {
+      let formData = $('#search-form').serialize();
+      formData += '&random=true';
+      console.log('start');
+      console.log(formData);
+      $.ajax({
+        type: 'GET',
+        url: "{% url 'MovieDB:advanced_search' %}",
+        data: formData,
+        success: function(data) {
+          $('#results').html(data);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+          alert('error');
+          console.log(xhr);
+          console.log(ajaxOptions);
+          console.log(thrownError);
+        }
+      });
+      e.preventDefault();
+      console.log('end');
+    });
+  </script>
+{% endblock js %}
+

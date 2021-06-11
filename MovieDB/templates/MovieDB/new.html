@@ -1,0 +1,20 @@
+{% extends 'MovieDB/base.html' %}
+{% load urlreplace %}
+
+{% block title %}
+  New Arrivals
+{% endblock %}
+
+{% block content %}
+
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title mb-0">New Arrivals</h2>
+    </div>
+  </div>
+
+  {% include 'MovieDB/movie_list.html' with movies=movies %}
+  {% include 'MovieDB/pagination.html' with page_obj=movies %}
+
+{% endblock content %}
+

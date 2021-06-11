@@ -2,3 +2,6 @@
 django-admin.py
 */migrations/*
 static/admin/*
+media/*
+.env
+*.swp

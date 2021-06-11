@@ -1,26 +1,120 @@
 {% load static %}
 <!doctype html>
-<head>
+<html lang="en">
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <title>Shitty Movie DB</title>
+    <title>{% block title %}ShittyPlex{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-        {% if not isMobile %}
-        div .header {
-            text-align: right;
-        }
-        {% endif %}
-    </style>
-</head>
-<body>
-    <div class="container-fluid" width="95%">
-        {% block content %}
-        {% endblock %}
-    </div>
-    {% block additional_js %}
+
+    {# CSS #}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'MovieDB/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'MovieDB/css/icomoon.css' %}">
+    {% block css %}
     {% endblock %}
-</body>
+    {# /CSS #}
+  </head>
+
+  <body class="bg-gray">
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+
+          <a class="navbar-brand" href="{% url 'MovieDB:home' %}">
+            <div class="row">
+              <div class="col">
+                <img src="{% static 'icon.svg' %}"></img>
+              </div>
+              <div class="col pl-0 align-self-center">ShittyPlex</div>
+            </div>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarContent">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{% url 'MovieDB:new' %}">New Arrivals</a>
+              <a class="nav-item nav-link" href="{% url 'MovieDB:random' %}">Random</a>
+              <a class="nav-item nav-link" href="{% url 'MovieDB:advanced_search' %}" >Advanced Search</a>
+            </div>
+
+            <div class="navbar-nav ml-auto">
+              {% if user.is_authenticated %}
+                <div class="nav-item dropdown">
+                  <a class="nav-link" href="#" data-toggle="dropdown">
+                    <span class="d-sm-inline d-md-none d-lg-inline">
+                      {{ user.username }}
+                    </span>
+                    <i class="fa fa-fw fa-user-circle"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item text-right" href="{% url 'MovieDB:profile' %}">Profile</a>
+                    {% if user.is_staff %}
+                      <a class="dropdown-item text-right" href="{% url 'admin:index' %}">Admin</a>
+                      <a class="dropdown-item text-right" href="{% url 'MovieDB:get_new_movies' %}">Check for New Movies</a>
+                    {% endif %}
+                    <a class="dropdown-item text-right" href="{% url 'logout' %}?next={{ request.get_full_path }}">Sign Out</a>
+                  </div>
+                </div>
+              {% else %}
+                <a class="nav-item nav-link" href="{% url 'login' %}?next={{ request.get_full_path }}">
+                  <span class="d-sm-inline d-md-none d-lg-inline">
+                    Sign In
+                  </span>
+                  <i class="fa fa-fw fa-sign-in"></i>
+                </a>
+            {% endif %}
+          </div>
+
+          <form class="form-inline my-2 mg-md-0" action="{% url 'MovieDB:search' %}" method="get" id="search">
+            <div class="input-group">
+              <input class="form-control" id="nav-search" type="search" placeholder="Search" name="q" {% if q %}value="{{q}}"{% endif %}>
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="submit">
+                  <i class="fa fa-fw fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </nav>
+    </header>
+
+    <div class="container main">
+
+      <div id="messages">
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible mt-3" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message|safe }}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% block content %}
+      {% endblock %}
+
+    </div>
+
+    {# JS #}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="{% static 'MovieDB/js/update-movie.js' %}"></script>
+    <script src="{% static 'MovieDB/js/custom.js' %}"></script>
+    {% block js %}
+    {% endblock %}
+    {# /JS #}
+
+  </body>
+</html>
     

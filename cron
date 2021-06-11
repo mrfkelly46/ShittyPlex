@@ -1,0 +1,4 @@
+#!/bin/bash
+source /home/pi/django/env/bin/activate
+python /home/pi/django/ShittyPlex/MovieDB/lib/populate.py --get-new --no-prompt 
+deactivate

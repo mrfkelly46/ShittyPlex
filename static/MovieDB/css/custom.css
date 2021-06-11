@@ -1,0 +1,108 @@
+html, body {
+  height: 100%;
+}
+body {
+  background-color: #eeeeee;
+}
+div.main {
+  padding-top: 96px;
+}
+.shadow {
+  -webkit-box-shadow: 1px 1px 15px 4px rgba(0,0,0,0.2) !important;
+  -moz-box-shadow: 1px 1px 15px 4px rgba(0,0,0,0.2) !important;
+  box-shadow: 1px 1px 15px 4px rgba(0,0,0,0.2) !important;
+}
+/*
+div.container {
+  height: 100%;
+}
+*/
+div.card {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+.disable-hover {
+  cursor: not-allowed;
+}
+
+
+
+/* Needed for dynamic poster resizing 
+div.card.movie-short {
+  min-width: 15rem;
+  max-width: 340px;;
+}
+.movie-short img {
+  max-width: 100%;
+  max-height: 100%;
+}
+*/
+
+
+
+/* Change header alignement when col alignment goes */
+div.header {
+  text-align: right;
+  margin-bottom: 2px;
+}
+@media only screen and (max-width: 768px) {
+  div.header {
+    text-align: left;
+  }
+}
+
+
+
+/* Smaller than lg */
+@media only screen and (max-width: 992px) {
+  /* Limit navbar search width */
+  #nav-search {
+    max-width: 150px;
+  }
+
+  /* Limit poster size/position */
+  .movie-detailed img {
+    max-width: 300px;
+    max-height: 450px;
+  }
+}
+
+
+/* ####################### */
+/* Deal with poster widths */
+/* One column */
+div.card.movie-short {
+  max-width: 100%;
+  min-width: 100%;
+}
+/* Two columns */
+@media only screen and (min-width: 575px) {
+  div.card.movie-short {
+    min-width: calc(50% - 30px);
+    max-width: calc(50% - 30px);
+  }
+}
+/* Three columns */
+@media only screen and (min-width: 950px) {
+  div.card.movie-short {
+    min-width: calc(33.33% - 30px);
+    max-width: calc(33.33% - 30px);
+  }
+}
+/* Four columns */
+@media only screen and (min-width: 1150px) {
+  div.card.movie-short {
+    min-width: calc(25% - 30px);
+    max-width: calc(25% - 30px);
+  }
+}
+
+img.custom-icon-large {
+  vertical-align: bottom !important;
+  height: 3em;
+}
+img.custom-icon-small {
+  vertical-align: bottom !important;
+  height: 2em;
+}
+

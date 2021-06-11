@@ -1,0 +1,13 @@
+
+store original location/cleaned location for every movie,
+then,
+whenever we check a file we can look to see if we have already added it in the past.
+
+Cases:
+  new torrent:  gross.file.name.mp4 will not be in DB, call process to add it a 'dirty' movie
+  new clean movie (put in manually): (YYYY) Clean Movie.mp4 will not be in DB, call process to add 'clean' movie (og location==cleaned location)
+  see old torrent:  gross.file.name.mp4 in DB, just check for updates -- no editing files.
+  see old clean torrent/symlink:  in DB as either og or cleaned or both, check for updates
+
+store last-checked and only check for updates on monday mornings?
+

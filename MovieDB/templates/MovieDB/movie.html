@@ -1,0 +1,219 @@
+{% load static %}
+{% if detailed %}
+
+  <div class="card movie-detailed">
+    <div class="row no-gutters">
+      
+      {# POSTER #}
+      <div class="col-lg-4">
+        {% if movie.poster %}
+          <img src="{{ movie.poster.url }}" class="card-img mx-auto d-block shadow"></img>
+        {% else %}
+          <img src="/media/placeholder.png" class="card-img mx-auto d-block shadow"></img>
+        {% endif %}
+      </div>
+      {# /POSTER #}
+
+      {# NOTE: Had to set d-flex in order for flex-fill to work below #}
+      {# INFO #}
+      <div class="col-lg-8 d-flex">
+        <div class="card-body d-flex flex-column">
+
+          {# HEADER #}
+          <div class="row">
+            <div class="col mr-auto">
+              <h2 class="card-title">
+                {{ movie.title }}
+              </h2>
+            </div>
+            <div class="col-auto ml-auto px-10">
+              <a target="_blank" href="https://letterboxd.com/tmdb/{{ movie.tmdb_id }}/" class="my-auto"><img src="{% static 'MovieDB/res/letterboxd.svg' %}" class="custom-icon-large"></img></a>
+              <a target="_blank" href="https://imdb.com/title/{{ movie.imdb_id }}/" class="my-auto"><img src="{% static 'MovieDB/res/imdb.svg' %}" class="custom-icon-large"></img></a>
+              {% comment %}
+              <a target="_blank" href="https://letterboxd.com/tmdb/{{ movie.tmdb_id }}/" class="my-auto"><i class="fa fa-3x fa-flickr text-dark"></i></a>
+              <a target="_blank" href="https://imdb.com/title/{{ movie.imdb_id }}/" class="my-auto"><i class="fa fa-3x fa-imdb text-dark"></i></a>
+              {% endcomment %}
+
+              {% if user.is_staff %}
+                <a href="{% url 'admin:MovieDB_movie_change' movie.id %}"><i class="fa fa-3x fa-pencil-square text-dark"></i></a>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col mr-auto">
+              <h6 class="card-subtitle text-muted py-2">{{ movie.year }} · {{ movie.runtime_long }} · {{ movie.rated }}</h6>
+              <h6 class="card-subtitle text-muted text-truncate">{{ movie.genres }}</h6>
+            </div>
+            <div class="col-auto d-flex align-items-center ml-auto">
+              <span class="pr-1" style="font-size:25px"><strong>{{ movie.imdb_rating }}/10</strong></span><i class="fa fa-3x fa-star text-warning"></i>
+            </div>
+          </div>
+          {# /HEADER #}
+
+          <div class="row">
+            <div class="col-12">
+              <hr/>
+            </div>
+          </div>
+
+          {# BODY #}
+          <div class="row">
+            <div class="col-md-3 header">
+              <strong>Directed By</strong>
+            </div>
+            <div class="col-md-9">
+              {{ movie.directors }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 header">
+              <strong>Writen By</strong>
+            </div>
+            <div class="col-md-9">
+              {{ movie.writers }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 header">
+              <strong>Cast</strong>
+            </div>
+            <div class="col-md-9">
+              {{ movie.actors }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 header">
+            </div>
+            <div class="col-md-9">
+              <hr/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 header">
+              <strong>Plot</strong>
+            </div>
+            <div class="col-md-9">
+              {{ movie.plot }}
+            </div>
+          </div>
+          {# /BODY #}
+
+          <div class="flex-grow-1 align-items-end" style="flex-grow:1">
+            {# Spacer to force buttons down #}
+          </div>
+
+
+          <div class="d-flex flex-row">
+            {% if True %} {#movie.extension != "mp4" %}#}
+              <a href="{% url 'MovieDB:movie_stream' movie.id %}">
+                <i class="pr-2 fa fa-3x fa-play-circle text-dark"></i>
+              </a>
+            {% else %}
+              <i class="pr-2 fa fa-3x fa-play-circle text-muted disable-hover"></i>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+              <a href="#" class="update-movie update-watched" id="{{ movie.id }}">
+                {% if movie.watched %}
+                  <i class="pr-2 fa fa-3x fa-eye text-primary"></i>
+                {% else %}
+                  <i class="pr-2 fa fa-3x fa-eye text-dark"></i>
+                {% endif %}
+              </a>
+              <a href="#" class="update-movie update-saved" id="{{ movie.id }}">
+                {% if movie.saved %}
+                  <i class="pr-2 fa fa-3x fa-bookmark text-primary"></i>
+                {% else %}
+                  <i class="pr-2 fa fa-3x fa-bookmark text-dark"></i>
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+      {# /INFO #}
+
+    </div>
+  </div>
+
+{% else %}
+
+  <div class="card movie-short">
+    <a href="{% url 'MovieDB:movie' movie.id %}">
+      {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" class="card-img-top shadow"></img>
+      {% else %}
+        <img src="/media/posters/placeholder.png" class="card-img-top shadow"></img>
+      {% endif %}
+    </a>
+    <div class="card-body py-1 d-flex flex-column">
+      <h5 class="card-title">
+        <a href="{% url 'MovieDB:movie' movie.id %}">
+          {{ movie.title }}
+        </a>
+      </h5>
+      <h6 class="card-subtitle text-muted pb-2 text-truncate">{{ movie.year }} · {{ movie.runtime_long }} · {{ movie.rated }}</h6>
+      <h6 class="card-subtitle text-muted pb-2 text-truncate">{{ movie.genres }}</h6>
+      
+      <div class="flex-grow-1 align-items-end" style="flex-grow:1">
+        {# Spacer to force buttons down #}
+      </div>
+
+      <div class="d-flex flex-row">
+        {% if True %} {#movie.extension != "mp4" %}#}
+          <a href="{% url 'MovieDB:movie_stream' movie.id %}">
+            <i class="pr-1 fa fa-2x fa-play-circle text-dark"></i>
+          </a>
+        {% else %}
+          <i class="pr-1 fa fa-2x fa-play-circle text-muted"></i>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          <a href="#" class="update-movie update-watched" id="{{ movie.id }}">
+            {% if movie.watched %}
+              <i class="pr-1 fa fa-2x fa-eye text-primary"></i>
+            {% else %}
+              <i class="pr-1 fa fa-2x fa-eye text-dark"></i>
+            {% endif %}
+          </a>
+          <a href="#" class="update-movie update-saved" id="{{ movie.id }}">
+            {% if movie.saved %}
+              <i class="fa fa-2x fa-bookmark text-primary"></i>
+            {% else %}
+              <i class="fa fa-2x fa-bookmark text-dark"></i>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        <div class="mx-auto text-muted">|</div>
+
+        <a target="_blank" href="https://letterboxd.com/tmdb/{{ movie.tmdb_id }}/">
+          <img src="{% static 'MovieDB/res/letterboxd.svg' %}" class="pr-1 custom-icon-small"></img>
+          {% comment %}
+          <i class="pr-1 fa fa-2x fa-flickr text-dark"></i>
+          {% endcomment %}
+        </a>
+
+        <a target="_blank" href="https://imdb.com/title/{{ movie.imdb_id }}/">
+          <img src="{% static 'MovieDB/res/imdb.svg' %}" class="custom-icon-small"></img>
+          {% comment %}
+          <i class="fa fa-2x fa-imdb text-dark"></i>
+          {% endcomment %}
+        </a>
+
+        {% if user.is_staff %}
+          <a href="{% url 'admin:MovieDB_movie_change' movie.id %}"><i class="pl-1 fa fa-2x fa-pencil-square text-dark"></i></a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+{% endif %}
+
