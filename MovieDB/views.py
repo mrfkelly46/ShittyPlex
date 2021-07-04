@@ -18,6 +18,7 @@ from MovieDB.models import Movie, Profile
 from MovieDB.lib import search as db_search
 from MovieDB.lib import set_movie_info
 from MovieDB.lib import MediaManager
+from MovieDB.lib import Query, Parser
 
 logger = logging.getLogger(__name__)
 
@@ -216,7 +217,6 @@ def advanced_search(request):
         context['watched'] = watched
         context['saved'] = saved
         context['streamable'] = streamable
-
 
     return render(request, 'MovieDB/advanced_search.html', context)
 

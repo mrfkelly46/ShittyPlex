@@ -1,17 +1,9 @@
+from MovieDB.lib import Query
 from MovieDB.models import Movie
 
-def search(filters='', order_by_1='title_sort', order_by_2='year', user=None, watched=None, saved=None, streamable=None):
-    filters_dict = {}
-    if filters:
-        filter_ = filters.split(', ')
-        for f in filter_:
-            # Filters inputed as '<field>:<term>, <field>:<term>' e.g. 'director:Ron Howard, rated:R'
-            temp = f.split(':')
-            # If no field declared, assume it is title
-            if len(temp) == 1:
-                filters_dict['title_search__icontains'] = temp[0]
-            else:
-                filters_dict[temp[0].lower()+'__icontains'] = temp[1]
+def search(q='', order_by_1='title_sort', order_by_2='year', user=None, watched=None, saved=None, streamable=None):
+    query = Query(Movie, 'title')
+    filters_dict = query.build(q)
     movies = Movie.objects.prefetch_related('watched_by', 'saved_by').filter(**filters_dict).order_by(order_by_1, order_by_2)
     #movies = Movie.objects.filter(**filters_dict).order_by(order_by_1, order_by_2)
     if user is not None and watched is not None:

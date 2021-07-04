@@ -1,3 +1,4 @@
+from .query import Query, Parser
 from .search import search, set_movie_info
 from .movie_api import TMDB, OMDB, MovieAPI
 from .blacklist import blacklist

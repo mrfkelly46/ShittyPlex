@@ -14,7 +14,7 @@ Advanced Search
 
         <div class="form-group">
           <label for="filters">Filters</label>
-          <input id="filters" type="text" class="form-control" name="filters" placeholder="Filter by title, or as <field>:<term> e.g. actors:tom cruise (multiple filters seperated by ', ')" value="{{ filters|default:"" }}">
+          <input id="filters" type="text" class="form-control" name="filters" placeholder="Filter by title, or on fields with Scryfall-like syntax (field:value, e.g. actor:'tom cruise' or year>=2010)" value="{{ filters|default:"" }}">
         </div>
 
         <div class="form-row">

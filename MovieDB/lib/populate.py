@@ -33,8 +33,11 @@ class MediaManager():
         return
 
     def get_runtime(self, filepath):
-        runtime = subprocess.check_output(['ffprobe', '-i', filepath, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=%s' % ("p=0")])
-        runtime = float(runtime) // 60
+        try:
+            runtime = subprocess.check_output(['ffprobe', '-i', filepath, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=%s' % ("p=0")])
+            runtime = float(runtime) // 60
+        except:
+            runtime = 0
         return runtime
 
     def discover_files(self):
@@ -51,10 +54,13 @@ class MediaManager():
             #print()
             print(root+'/'+file)
             pprint(info)
+            if 'extras' in root.lower() and 'extras' not in file:
+                #print('Skipping items in .../extras/...')
+                continue
             if 'title' in info and info['title'].lower() in blacklist:
                 #print('Skipping sample for "{}"'.format(file))
                 continue
-            if 'extension' not in info:
+            if 'extension' not in info or info['extension']=='part':
                 #print('Bad extension for "{}"'.format(file))
                 continue
             if 'season' in info and 'episode' in info:
@@ -149,7 +155,7 @@ class MediaManager():
                 choice = input('Get movie poster for "({year}) {title}"? [Y/N] '.format(year=results['year'], title=results['title']))
                 if choice.lower() != 'y':
                     get_poster = False
-            if get_poster:
+            if get_poster and poster_url:
                 print('Getting movie poster for "{movie}"...'.format(movie=movie))
                 poster = requests.get(poster_url)
                 poster_path = '/home/pi/django/ShittyPlex/media/posters/{}.png'.format(movie.id)
