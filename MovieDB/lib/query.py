@@ -44,6 +44,7 @@ class Query:
         for f in self.fields:
             if f.lower().startswith(field.lower()):
                 return f 
+        return field
         
 
 class ParserStep(Enum):

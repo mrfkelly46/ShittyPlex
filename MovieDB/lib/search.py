@@ -2,8 +2,10 @@ from MovieDB.lib import Query
 from MovieDB.models import Movie
 
 def search(q='', order_by_1='title_sort', order_by_2='year', user=None, watched=None, saved=None, streamable=None):
-    query = Query(Movie, 'title')
-    filters_dict = query.build(q)
+    filters_dict = {}
+    if q:
+        query = Query(Movie, 'title_search')
+        filters_dict = query.build(q)
     movies = Movie.objects.prefetch_related('watched_by', 'saved_by').filter(**filters_dict).order_by(order_by_1, order_by_2)
     #movies = Movie.objects.filter(**filters_dict).order_by(order_by_1, order_by_2)
     if user is not None and watched is not None:
