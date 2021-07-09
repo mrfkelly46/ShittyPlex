@@ -25,18 +25,28 @@ class Query:
         for field in self.model._meta.fields:
             self.fields[field.name] = field
 
-    def build(self, query):
+    def get_filters_dict(self, string):
         filters = {}
-        chunks = self.parser.parse(query)
+        chunks = self.parser.parse(string)
         for field, queries in chunks.items():
             field = self._match(field)
             for operator, values in queries.items():
                 lookup = field + self.operators[operator]
                 if len(values) > 1 and field != self.default:
-                    raise Exception('Currently cannot query "{0}" on multiple values: "{1}"'.format(field, values))
+                    raise Exception('Cannot build filters dict for multiple values on "{2}": "{1}"'.format(field, values))
                 value = ' '.join(values)
                 filters[lookup] = value
         return filters
+
+    def get_query(self, string, query):
+        chunks = self.parser.parse(string)
+        for field, queries in chunks.items():
+            field = self._match(field)
+            for operator, values in queries.items():
+                lookup = field + self.operators[operator]
+                for value in values:
+                    query = query.filter(**{lookup:value})
+        return query
         
     def _match(self, field):
         if field == '':
