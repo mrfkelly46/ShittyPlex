@@ -14,9 +14,10 @@ class Query:
         '<=': '__lte',
     }
 
-    def __init__(self, model, default):
+    def __init__(self, model, default_field, default_field_display=None):
         self.model = model
-        self.default = default
+        self.default_field = default_field
+        self.default_field_display = default_field_display
         self._setup()
         self.parser = Parser()
 
@@ -47,10 +48,24 @@ class Query:
                 for value in values:
                     query = query.filter(**{lookup:value})
         return query
+
+    def get_message(self, string):
+        message = []
+        chunks = self.parser.parse(string)
+        for field, queries in chunks.items():
+            field = self._match(field)
+            if field == self.default_field and self.default_field_display is not None:
+                field = self.default_field_display
+            for operator, values in queries.items():
+                if operator in [':', '=']:
+                    operator = 'contains'
+                for value in values:
+                    message.append('the {0} {1} {2}'.format(field, operator, value))
+        return ' and '.join(message)
         
     def _match(self, field):
         if field == '':
-            return self.default
+            return self.default_field
         for f in self.fields:
             if f.lower().startswith(field.lower()):
                 return f 
