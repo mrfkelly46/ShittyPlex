@@ -58,7 +58,7 @@ class Query:
                 field = self.default_field_display
             for operator, values in queries.items():
                 if operator in [':', '=']:
-                    operator = 'contains'
+                    operator = 'includes'
                 for value in values:
                     message.append('the {0} {1} {2}'.format(field, operator, value))
         return ' and '.join(message)
