@@ -1,12 +1,17 @@
+import logging
+
 from django.contrib import admin
+from django_object_actions import DjangoObjectActions
 from .models import Fact
 from .models import Movie
 from .models import Profile
 
+logger = logging.getLogger(__name__)
+
 class FactAdmin(admin.ModelAdmin):
     list_display = ['text']
 
-class MovieAdmin(admin.ModelAdmin):
+class MovieAdmin(DjangoObjectActions, admin.ModelAdmin):
     list_display = ['id', 'year', 'title', 'title_sort', 'title_search']
     list_editable = ['title_sort', 'title_search']
     search_fields = ['id', 'year', 'title', 'title_sort', 'title_search']
@@ -18,6 +23,14 @@ class MovieAdmin(admin.ModelAdmin):
             from MovieDB.lib import MediaManager
             manager = MediaManager()
             manager.update(obj)
+
+    def update(self, request, obj):
+        from MovieDB.lib import MediaManager
+        manager = MediaManager()
+        manager.update(obj)
+
+    change_actions = ('update', )
+        
         
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user']

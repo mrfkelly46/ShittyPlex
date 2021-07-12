@@ -142,6 +142,7 @@ class MediaManager():
       
         print()
         pprint(results)
+        logger.debug(results)
 
         # Set the runtime based on actual file when we first discover it
         results.pop('runtime')

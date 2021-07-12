@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'django_user_agents',
     'debug_toolbar',
     #'template_timings_panel',
+    'django_object_actions',
     'MovieDB.apps.MoviedbConfig',
     'accounts.apps.AccountsConfig',
 ]
