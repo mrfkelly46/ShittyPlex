@@ -5,15 +5,6 @@ from enum import Enum
 class Query:
     fields = {}
 
-    operators = {
-        ':': '__icontains',
-        '=': '__icontains',
-        '>': '__gt',
-        '<': '__lt',
-        '>=': '__gte',
-        '<=': '__lte',
-    }
-
     def __init__(self, model, default_field, default_field_display=None):
         self.model = model
         self.default_field = default_field
@@ -32,7 +23,7 @@ class Query:
         for field, queries in chunks.items():
             field = self._match(field)
             for operator, values in queries.items():
-                lookup = field + self.operators[operator]
+                lookup = field + self._operator(field, operator)
                 if len(values) > 1 and field != self.default:
                     raise Exception('Cannot build filters dict for multiple values on "{2}": "{1}"'.format(field, values))
                 value = ' '.join(values)
@@ -44,7 +35,7 @@ class Query:
         for field, queries in chunks.items():
             field = self._match(field)
             for operator, values in queries.items():
-                lookup = field + self.operators[operator]
+                lookup = field + self._operator(field, operator)
                 for value in values:
                     query = query.filter(**{lookup:value})
         return query
@@ -58,11 +49,14 @@ class Query:
                 field = self.default_field_display
             for operator, values in queries.items():
                 if operator in [':', '=']:
-                    operator = 'includes'
+                    if self._is_numeric(field):
+                        operator = 'equals'
+                    else:
+                        operator = 'includes'
                 for value in values:
                     message.append('the {0} {1} {2}'.format(field, operator, value))
         return ' and '.join(message)
-        
+
     def _match(self, field):
         if field == '':
             return self.default_field
@@ -70,6 +64,30 @@ class Query:
             if f.lower().startswith(field.lower()):
                 return f 
         return field
+
+    def _is_numeric(self, field):
+        numerics = [
+            'IntegerField',
+            'DecimalField',
+        ]
+        return self.fields[field].get_internal_type() in numerics
+        
+    def _operator(self, field, operator):
+        operators = {
+            ':': '__icontains',
+            '=': '__icontains',
+            '>': '__gt',
+            '<': '__lt',
+            '>=': '__gte',
+            '<=': '__lte',
+        }
+        if operator in ['=', ':'] and self._is_numeric(field):
+            return '__exact'
+        return operators[operator]
+            
+
+        
+        
         
 
 class ParserStep(Enum):
