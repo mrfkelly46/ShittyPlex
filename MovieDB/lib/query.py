@@ -41,6 +41,8 @@ class Query:
         return query
 
     def get_message(self, string):
+        if not string.strip():
+            return ''
         message = []
         chunks = self.parser.parse(string)
         for field, queries in chunks.items():

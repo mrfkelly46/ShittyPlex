@@ -148,7 +148,8 @@ def search(request):
     context['movies'] = paginator.get_page(page_number)
 
     query = Query(Movie, 'title_search', 'title')
-    context['search_message'] = query.get_message(q)
+    if q.strip():
+        context['search_message'] = query.get_message(q)
 
     return render(request, 'MovieDB/search.html', context)
 

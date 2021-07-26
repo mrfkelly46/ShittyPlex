@@ -9,7 +9,7 @@
 
   <div class="card">
     <div class="card-body">
-      <p class="card-title mb-0"><strong>{{ movies|length }}</strong> movies where {{ search_message }}</p>
+      <p class="card-title mb-0"><strong>{{ movies.paginator.count }}</strong> movies {{ search_message }}</p>
     </div>
   </div>
 
