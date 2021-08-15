@@ -59,7 +59,7 @@ Advanced Search
               </select>
             </div>
             <div class="form-group col-4">
-              <label for="saved">Saved</label>
+              <label for="saved">Watchlist</label>
               <select id="saved" name="saved" class="form-control selectpicker" data-style="bg-gray">
                 {% for option, value in saved_options.items %}
                   <option value="{{ value }}" {% if value in saved %} selected {% endif %}>{{ option }}</option>
@@ -71,6 +71,10 @@ Advanced Search
         
         <button class="btn btn-dark" type="submit" name="search">Search</button> 
         <button id="random" class="btn btn-dark" type="submit" name="random">Random</button> 
+
+        {% if movies %}
+          {{ movies.paginator.count }} movies
+        {% endif %}
 
       </form>
     </div>

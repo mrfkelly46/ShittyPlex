@@ -121,7 +121,7 @@ def new(request):
 @login_required
 def watchlist(request):
     context = {}
-    movies = db_search(order_by_1='?', user=request.user, saved='yes')
+    movies = db_search(order_by_1='title', user=request.user, saved='yes')
     paginator = Paginator(movies, 20)
     page_number = request.GET.get('page')
     context['movies'] = paginator.get_page(page_number)
