@@ -112,16 +112,21 @@ def movie_transcode(request, id):
 def new(request):
     context = {}
     movies = db_search(order_by_1='-added', user=request.user)
-    if len(movies) == 1:
-        response = redirect('MovieDB:movie', id=movies[0].id)
-        return response
-    # context['movies'] = movies
-
     paginator = Paginator(movies, 20)
     page_number = request.GET.get('page')
     context['movies'] = paginator.get_page(page_number)
 
     return render(request, 'MovieDB/new.html', context)
+
+@login_required
+def watchlist(request):
+    context = {}
+    movies = db_search(order_by_1='?', user=request.user, saved='yes')
+    paginator = Paginator(movies, 20)
+    page_number = request.GET.get('page')
+    context['movies'] = paginator.get_page(page_number)
+    
+    return render(request, 'MovieDB/watchlist.html', context)
 
 def random(request):
     # Randomly order movies, take the first result

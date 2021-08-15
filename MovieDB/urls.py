@@ -10,6 +10,7 @@ urlpatterns = [
     path('movie/<int:id>/stream/', views.movie_stream, name='movie_stream'),
     path('movie/<int:id>/transcode/', views.movie_transcode, name='movie_transcode'),
     path('new/', views.new, name='new'),
+    path('watchlist/', views.watchlist, name='watchlist'),
     path('random/', views.random, name='random'),
     path('search/', views.search, name='search'),
     path('advanced_search/', views.advanced_search, name='advanced_search'),

@@ -38,9 +38,10 @@
 
           <div class="collapse navbar-collapse" id="navbarContent">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{% url 'MovieDB:new' %}">New Arrivals</a>
-              <a class="nav-item nav-link" href="{% url 'MovieDB:random' %}">Random</a>
-              <a class="nav-item nav-link" href="{% url 'MovieDB:advanced_search' %}" >Advanced Search</a>
+              <a class="nav-item nav-link {% if request.resolver_match.view_name == 'MovieDB:new' %}active{% endif %}" href="{% url 'MovieDB:new' %}">New Arrivals</a>
+              <a class="nav-item nav-link {% if request.resolver_match.view_name == 'MovieDB:watchlist' %}active{% endif %}" href="{% url 'MovieDB:watchlist' %}">Watchlist</a>
+              <a class="nav-item nav-link {% if request.resolver_match.view_name == 'MovieDB:advanced_search' %}active{% endif %}" href="{% url 'MovieDB:advanced_search' %}">Advanced Search</a>
+              <a class="nav-item nav-link {% if request.resolver_match.view_name == 'MovieDB:random' %}active{% endif %}" href="{% url 'MovieDB:random' %}">Random</a>
             </div>
 
             <div class="navbar-nav ml-auto">
