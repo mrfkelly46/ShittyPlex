@@ -22,7 +22,7 @@ class Movie(models.Model):
     year = models.IntegerField(db_index=True)
     title_sort = models.CharField(max_length=128)
     title_search = models.CharField(max_length=128)
-    plot = models.TextField(blank=True, null=True)
+    plot = models.TextField(max_length=512, blank=True, null=True)
     directors = models.TextField(blank=True, null=True)
     writers = models.TextField(blank=True, null=True)
     actors = models.TextField(blank=True, null=True)

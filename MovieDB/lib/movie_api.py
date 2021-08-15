@@ -126,7 +126,7 @@ class MovieAPI():
         info['tmdb_id']     = info_tmdb['id']
         info['title']       = info_tmdb['title']
         info['year']        = release_date.year
-        info['plot']        = info_omdb['Plot']
+        info['plot']        = info_tmdb['overview']
         info['directors']   = info_omdb['Director']
         info['writers']     = info_omdb['Writer']
         info['actors']      = info_omdb['Actors']
