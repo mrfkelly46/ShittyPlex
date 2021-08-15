@@ -106,3 +106,14 @@ img.custom-icon-small {
   height: 2em;
 }
 
+/* "Quiet" links, no color and only underline when hovered */
+a.quiet-link {
+  color: inherit !important;
+  text-decoration: inherit !important;
+}
+
+a.quiet-link:hover {
+  color: inherit !important;
+  text-decoration: underline !important;
+}
+

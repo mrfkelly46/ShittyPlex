@@ -136,7 +136,7 @@ def search(request):
     context = {}
     q = request.GET.get('q')
     movies = db_search(q, user=request.user)
-    if len(movies) == 1:
+    if len(movies) == 1 and not request.GET.get('list'):
         response = redirect('MovieDB:movie', id=movies[0].id)
         response['Location'] += '?q=' + q
         return response
