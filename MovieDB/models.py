@@ -90,6 +90,7 @@ def update_paths(sender, instance, **kwargs):
         if obj.title != instance.title or obj.year != instance.year:
             # Title/year has changed, update file:
             new_path = os.path.dirname(os.path.abspath(instance.path))
+            instance.title = instance.title.replace('/', '')
             new_path = os.path.join(new_path, '({movie.year}) {movie.title}.{movie.extension}'.format(movie=instance))
             os.rename(obj.path, new_path)
             # If original_path==path -> no symlink, set both to new path

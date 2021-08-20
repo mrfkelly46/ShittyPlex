@@ -9,6 +9,8 @@ register = template.Library()
 
 @register.filter
 def linkify(string, field):
+    if not string:
+        return ''
     links = []
     values = string.split(',')
     for value in values:

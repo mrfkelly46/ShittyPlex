@@ -125,7 +125,7 @@ class MovieAPI():
         
         print('({}) {}'.format(release_date.year, info_tmdb['title']))
         info['tmdb_id']     = info_tmdb['id']
-        info['title']       = info_tmdb['title']
+        info['title']       = info_tmdb['title'].replace('/', '')
         info['year']        = release_date.year
         if re.match('[?.!]$', info_omdb['Plot']):
             # Sometimes OMDB plots are truncated, if so instead use TMDB
