@@ -11,6 +11,7 @@ class Query:
         self.default_field_display = default_field_display
         self._setup()
         self.parser = Parser()
+        self.order = None
 
     def _setup(self):
         self.fields = {}
@@ -21,7 +22,12 @@ class Query:
         filters = {}
         chunks = self.parser.parse(string)
         for field, queries in chunks.items():
+            if field == 'order':
+                self.order = self._match(queries[':'][0])
+                continue
             field = self._match(field)
+            if field not in self.fields:
+                continue
             for operator, values in queries.items():
                 lookup = field + self._operator(field, operator)
                 if len(values) > 1 and field != self.default:
@@ -33,11 +39,18 @@ class Query:
     def get_query(self, string, query):
         chunks = self.parser.parse(string)
         for field, queries in chunks.items():
+            if field == 'order':
+                self.order = self._match(queries[':'][0])
+                continue
             field = self._match(field)
+            if field not in self.fields:
+                continue
             for operator, values in queries.items():
                 lookup = field + self._operator(field, operator)
                 for value in values:
                     query = query.filter(**{lookup:value})
+        if self.order:
+            query = query.order_by(self.order)
         return query
 
     def get_message(self, string):
@@ -45,8 +58,13 @@ class Query:
             return ''
         message = []
         chunks = self.parser.parse(string)
+        ordered_by = None
         for field, queries in chunks.items():
+            if field == 'order':
+                ordered_by = ', ordered by {0}'.format(queries[':'][0])
             field = self._match(field)
+            if field not in self.fields:
+                continue
             if field == self.default_field and self.default_field_display is not None:
                 field = self.default_field_display
             for operator, values in queries.items():
@@ -57,7 +75,10 @@ class Query:
                         operator = 'includes'
                 for value in values:
                     message.append('the {0} {1} {2}'.format(field, operator, value))
-        return ' and '.join(message)
+        message = ' and '.join(message)
+        if ordered_by:
+            message += ordered_by
+        return message
 
     def _match(self, field):
         if field == '':
@@ -72,7 +93,8 @@ class Query:
             'IntegerField',
             'DecimalField',
         ]
-        return self.fields[field].get_internal_type() in numerics
+        if field in self.fields:
+            return self.fields[field].get_internal_type() in numerics
         
     def _operator(self, field, operator):
         operators = {
@@ -86,10 +108,6 @@ class Query:
         if operator in ['=', ':'] and self._is_numeric(field):
             return '__exact'
         return operators[operator]
-            
-
-        
-        
         
 
 class ParserStep(Enum):
@@ -104,7 +122,6 @@ class ParserException(Exception):
     
 
 class Parser:
-
     SEPARATORS = [':', '=', '>', '<']
     QUOTES = ['"', '\'']
 

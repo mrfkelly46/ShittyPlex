@@ -55,7 +55,7 @@ LOGGING = {
     'disable_existing_logger': False,
     'formatters': {
         'verbose': {
-            'format': '{asctime} {levelname} {module}: {message}',
+            'format': '{asctime} {levelname} [{name}:{lineno}] - {message}',
             'style': '{',
         },
     },
