@@ -57,6 +57,9 @@ class MediaManager():
             if 'extras' in root.lower() and 'extras' not in file:
                 #print('Skipping items in .../extras/...')
                 continue
+            if 'featurettes' in root.lower() and 'featurettes' not in file:
+                #print('Skipping items in .../featurettes/...')
+                continue
             if 'title' in info and info['title'].lower() in blacklist:
                 #print('Skipping sample for "{}"'.format(file))
                 continue
